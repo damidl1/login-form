@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { CustomValidators } from 'src/app/validators/custom-validators';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-register',
@@ -16,31 +17,32 @@ export class RegisterComponent {
   registerForm = this.fb.group({
     userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, CustomValidators.isPasswordValid(), Validators.pattern('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/')]],
+    password: ['', [Validators.required, CustomValidators.isPasswordValid(), CustomValidators.keywordValidator()]],
     country: [''],
-    yob: [new Date().getFullYear(), [Validators.required, CustomValidators.checkNotMinor()]],
+    yob: [2023, [Validators.required, CustomValidators.checkNotMinor()]],
     phoneNumber: [''],
     gender: ['']
   })
 
-  constructor(private fb: FormBuilder ){}
+  constructor(private fb: FormBuilder, private storage: LocalStorageService ){}
 
   onSubmit(){
     console.log(this.registerForm.valid)
     console.log(this.registerForm.value)
+    this.storage.saveUser(this.registerForm.value);
   }
 
 
-//   // profileForm = new FormGroup({
-//   //   firstName: new FormControl(''),
-//   //   lastName: new FormControl(''),
-//   //   address: new FormGroup({
-//   //     street: new FormControl(''),
-//   //     city: new FormControl(''),
-//   //     state: new FormControl(''),
-//   //     zip: new FormControl(''),
-//   //   }),
-//   // });
+  // profileForm = new FormGroup({
+  //   firstName: new FormControl(''),
+  //   lastName: new FormControl(''),
+   //   address: new FormGroup({
+  //     street: new FormControl(''),
+   //     city: new FormControl(''),
+  //     state: new FormControl(''),
+  //     zip: new FormControl(''),
+  //   }),
+     // });
 
 //   profileForm = this.fb.group({  //sintassi diversa da quella sopra ma con gli stessi effetti
 //     firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -59,7 +61,7 @@ export class RegisterComponent {
 
 
 //   onSubmit() {
-//     // TODO: Use EventEmitter with form value
+     // TODO: Use EventEmitter with form value
 //     console.warn(this.profileForm.value);
 //   }
 
