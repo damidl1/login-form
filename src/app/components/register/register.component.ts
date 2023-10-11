@@ -4,6 +4,7 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } fr
 import { FormBuilder } from '@angular/forms';
 import { CustomValidators } from 'src/app/validators/custom-validators';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { User } from 'src/app/model/user';
 
 @Component({
   selector: 'app-register',
@@ -24,12 +25,12 @@ export class RegisterComponent {
     gender: ['']
   })
 
-  constructor(private fb: FormBuilder, private storage: LocalStorageService ){}
+  constructor(private fb: FormBuilder, private storage: LocalStorageService){}
 
   onSubmit(){
-    console.log(this.registerForm.valid)
-    console.log(this.registerForm.value)
-    this.storage.saveUser(this.registerForm.value);
+    console.log(this.registerForm.valid);
+    console.log(this.registerForm.value);
+    this.storage.saveUser(this.registerForm.value as User);
   }
 
 

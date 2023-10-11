@@ -1,23 +1,49 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { User } from '../model/user';
+
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageService {
+  constructor() {}
 
-  favoritesSubjects = new BehaviorSubject<any[]>([]);
+  saveUser(user: User) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
 
-  constructor() {
-    if (localStorage.getItem('saved')) {
-      this.favoritesSubjects.next(JSON.parse(localStorage.getItem('saved')!))
+  checkUser(userName: string, password: string): boolean {
+    if (localStorage.getItem('user')) {
+      const userString = localStorage.getItem('user');
+      const user = JSON.parse(userString!);
+      const isUsernameValid = userName === user.userName;
+      const isPasswordValid = password === user.password;
+      const isLoginValid = isUsernameValid && isPasswordValid;
+
+      if (isLoginValid) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
     }
   }
 
-  saveUser(user: any): void {
-    const actualArray = this.favoritesSubjects.value;
-    const newArray = [...actualArray, user];
-    this.favoritesSubjects.next(newArray);
-    localStorage.setItem('saved', JSON.stringify(newArray));
+  saveLogin() {
+    localStorage.setItem('isLogged', JSON.stringify(true));
+  }
+
+  checkLogin() {
+    if (localStorage.getItem('isLogged')) {
+      const isLogged = localStorage.getItem('isLogged');
+      if (isLogged === 'true') {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }
